@@ -1,4 +1,4 @@
-Sure, here's a sample GitHub README.md file for a VPC module with NAT Gateway, EIP, NACL, and Security Group:
+sample GitHub README.md file for a VPC module with NAT Gateway, EIP, NACL, and Security Group:
 
 ```markdown
 # VPC Module with NAT Gateway, EIP, NACL, and Security Group
