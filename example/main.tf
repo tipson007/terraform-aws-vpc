@@ -12,3 +12,12 @@ module "vpc" {
   private_data_subnet_az2_cidr = var.private_data_subnet_az2_cidr
   container_subnet_cidr        = var.container_subnet_cidr
 }
+
+module "security_groups" {
+  source = "../modules/security_group"
+
+  environment      = var.environment
+  environment_type = var.environment_type
+  region           = var.region
+  vpc_id           = module.vpc.vpc_id
+}
