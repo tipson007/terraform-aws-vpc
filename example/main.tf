@@ -1,6 +1,5 @@
 module "vpc" {
-  source = "tipson007/vpc/aws"
-  #source                       = "../modules/vpc"
+  source                       = "../modules/vpc"
   environment                  = var.environment
   environment_type             = var.environment_type
   region                       = var.region
@@ -15,9 +14,7 @@ module "vpc" {
 }
 
 module "security_groups" {
-  #source = "../modules/security_group"
-  source = "tipson007/vpc/aws"
-
+  source = "../modules/security_group
   environment      = var.environment
   environment_type = var.environment_type
   region           = var.region
