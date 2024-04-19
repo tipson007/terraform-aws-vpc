@@ -24,6 +24,11 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
         uses: actions/checkout@v4.1.1
+        with: 
+          sparse-checkout: |
+          repository: terraform-aws-vpc
+          path: example/
+          
             
 
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
@@ -45,9 +50,12 @@ jobs:
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
-        run: |
-          terraform plan -input=false
-        working-directory: example/     
+        uses:  actions/checkout@v4.1.1
+        with: 
+            sparse-checkout: |
+            repository: terraform-aws-vpc
+            path: example/
+            run: terraform plan -input=false   
         continue-on-error: true 
 
       # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
