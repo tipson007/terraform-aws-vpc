@@ -46,6 +46,7 @@ jobs:
       - name: Terraform Plan
         run: |
           ls -l example/
+          cd example/
           terraform plan -input=false
         working-directory: example/     
         continue-on-error: true 
