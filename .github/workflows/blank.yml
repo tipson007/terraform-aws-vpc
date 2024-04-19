@@ -3,7 +3,9 @@ name: 'Terraform'
 
 on:
   push:
-    branches: [ "feature/test-pipeline" ]
+  
+    branches: [ "master" ]
+
   pull_request:
 
 permissions:
@@ -33,7 +35,11 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
+
+      working-directory: example/
+
       working-directory: project-zenith-example/
+
       run: terraform init 
 
     # Checks that all Terraform configuration files adhere to a canonical format
@@ -48,7 +54,11 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
+
+      working-directory:  example/
+
       working-directory: example/
+
       run: terraform plan -input=false
       continue-on-error: true 
 
