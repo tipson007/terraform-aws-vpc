@@ -37,16 +37,11 @@ jobs:
         working-directory: example/
 
       # Additional test step
-      - name: Terraform test
+      - name: Debug
         run: |
           pwd
-          ls -ltr
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.tfc_team_token }}
-          
+          ls -l example/
+   
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: |
