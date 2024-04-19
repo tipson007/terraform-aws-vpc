@@ -1,9 +1,8 @@
-name: Terraform
+name: 'Terraform'
 
 on:
   push:
-    branches: 
-      - develop
+    branches: [ "develop" ]
   pull_request:
 
 permissions:
@@ -15,40 +14,42 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    # Use the Bash shell regardless of the GitHub Actions runner type
     defaults:
       run:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v3
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.tfc_team_token }}
+      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.tfc_team_token }}
 
-    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: |
-        terraform init example/
+      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+      - name: Terraform Init
+        working-directory: example/
+        run: terraform init 
 
-    # Checks that all Terraform configuration files adhere to a canonical format
-    # - name: Terraform Format
-    #   run: terraform fmt -check example/
+      # Additional test step
+      - name: Terraform test
+        run: |
+          pwd
+          ls -ltr
 
-    # Generates an execution plan for Terraform
-    - name: Terraform Plan
-      run: |
-        terraform plan -input=false example/
-      continue-on-error: true 
+      # Generates an execution plan for Terraform
+      - name: Terraform Plan
+        working-directory:  example/
+        run: terraform plan -input=false
+        continue-on-error: true 
 
-    # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
-    # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/feature/test-pipeline' && github.event_name == 'push'
-      run: |
-        terraform apply -auto-approve -input=false example/
+      # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
+      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud".
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/feature/test-pipeline' && github.event_name == 'push'
+        working-directory: example/
+        run: terraform apply -auto-approve -input=false
