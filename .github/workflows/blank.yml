@@ -1,11 +1,9 @@
-
-name: 'Terraform'
+name: Terraform
 
 on:
   push:
-  
-    branches: [ "develop" ]
-
+    branches: 
+      - develop
   pull_request:
 
 permissions:
@@ -35,31 +33,22 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      working-directory: example/
-      run: terraform init 
+      run: |
+        terraform init example/
 
     # Checks that all Terraform configuration files adhere to a canonical format
-   # - name: Terraform Format
-   #   working-directory: example/
-   #   run: terraform fmt -check
-
-    - name: Terraform test
-      run: |
-          pwd
-          ls -ltr
+    # - name: Terraform Format
+    #   run: terraform fmt -check example/
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-
-      working-directory:  example/
-
-      run: terraform plan -input=false
+      run: |
+        terraform plan -input=false example/
       continue-on-error: true 
 
-      # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
+    # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
-      if: github.ref == 'refs/heads/"feature/test-pipeline"' && github.event_name == 'push'
-      working-directory: example/
-      run: terraform apply -auto-approve -input=false
-      
+      if: github.ref == 'refs/heads/feature/test-pipeline' && github.event_name == 'push'
+      run: |
+        terraform apply -auto-approve -input=false example/
