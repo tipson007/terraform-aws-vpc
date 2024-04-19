@@ -33,14 +33,14 @@ jobs:
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         working-directory: example/
-        run: |
-          ls -ltr example/
-          terraform init 
+        run: terraform init 
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         working-directory:  example/
-        run: terraform plan -input=false
+        run: |
+          ls -ltr example/
+          terraform plan -input=false
         continue-on-error: true 
 
       # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
