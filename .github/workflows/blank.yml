@@ -23,8 +23,22 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout
-        uses: actions/checkout@v4.1.1
-  
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          path: example/
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ssh-strict: true
+          persist-credentials: true
+          clean: true
+          sparse-checkout-cone-mode: true
+          fetch-depth: 1
+          fetch-tags: false
+          show-progress: true
+          lfs: false
+          submodules: true
+          set-safe-directory: true
+
       # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -44,12 +58,9 @@ jobs:
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
-        uses:  actions/checkout@v4.1.1
-        with: 
-            sparse-checkout: |
-            repository: terraform-aws-vpc
-            path: example/
-            run: terraform plan -input=false   
+        run: |
+          terraform plan -input=false
+        working-directory: example/     
         continue-on-error: true 
 
       # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
