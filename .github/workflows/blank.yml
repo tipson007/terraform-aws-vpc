@@ -1,59 +1,46 @@
-name: 'Terraform'
+name: Terraform 
 
 on:
   push:
-    branches: 
-      - "develop"
+    branches:
+      - develop
   pull_request:
 
-permissions:
-  contents: read
-
-jobs: 
+jobs:
   terraform:
-    name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
-
-    # Use the Bash shell regardless of the GitHub Actions runner type
-    defaults:
-      run:
-        shell: bash
 
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-      - name: Setup Terraform
+      - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          cli_config_credentials_token: ${{ secrets.tfc_team_token }}
+          terraform_version: ${{ matrix.terraform_version }}
 
-      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-      - name: Terraform Init
-        run: terraform init
-        working-directory: example/
-
-      # Additional test step
-      - name: Debug
+      - name: Configure Terraform Credentials
         run: |
-          pwd
-          ls -l example/
-   
-      # Generates an execution plan for Terraform
+          echo 'credentials "app.terraform.io" {' > $HOME/.terraformrc
+          echo '  token = "${{ secrets.tfc_team_token }}"' >> $HOME/.terraformrc
+          echo '}' >> $HOME/.terraformrc
+
+      - name: List Files in Working Directory
+        run: |
+          ls -R $GITHUB_WORKSPACE
+
+      - name: Terraform Init
+        run: |
+          cd example/
+          terraform init -upgrade -no-color -input=false
+
       - name: Terraform Plan
         run: |
-          ls -l example/
           cd example/
-          terraform plan -input=false
-        working-directory: example/     
-        continue-on-error: true 
+          terraform plan -out=tfplan.out
 
-      # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud".
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/feature/test-pipeline' && github.event_name == 'push'
-        working-directory: example/
-        run: terraform apply -auto-approve -input=false
+      - name: Publish Terraform Plan Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: tfplan
+          path: example/tfplan.out
