@@ -39,13 +39,11 @@ jobs:
       - name: Terraform Plan
         working-directory:  example/
         run: |
-          ls -ltr example/
           terraform plan -input=false
         continue-on-error: true 
 
-      # On push to "feature/test-pipeline", build or change infrastructure according to Terraform configuration files
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud".
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/feature/test-pipeline' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
         working-directory: example/
         run: terraform apply -auto-approve -input=false
