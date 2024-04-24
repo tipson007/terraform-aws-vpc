@@ -12,12 +12,10 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
-
-    # Use the Bash shell regardless of the GitHub Actions runner type
     defaults:
       run:
         shell: bash
+        working-directory: ./example
 
     steps:
       # Checkout the repository to the GitHub Actions runner
@@ -32,12 +30,10 @@ jobs:
 
       # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
-        working-directory: example/
         run: terraform init 
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
-        working-directory:  example/
         run: |
           terraform plan -input=false
         continue-on-error: true 
@@ -45,5 +41,4 @@ jobs:
       # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud".
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        working-directory: example/
         run: terraform apply -auto-approve -input=false
