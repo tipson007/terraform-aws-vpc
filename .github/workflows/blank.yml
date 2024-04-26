@@ -16,7 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./modules
+        working-directory: ./example
         # working-directory: ${{ inputs.terraform_directory }}
 
     steps:
