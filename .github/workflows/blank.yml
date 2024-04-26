@@ -1,3 +1,4 @@
+
 name: 'Terraform'
 
 on:
@@ -15,7 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./example
+       # working-directory: ./example
+        working-directory: ${{ inputs.terraform_directory }}
 
     steps:
       # Checkout the repository to the GitHub Actions runner
