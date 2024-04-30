@@ -20,4 +20,3 @@ module "security_groups" {
   region           = var.region
   vpc_id           = module.vpc.vpc_id
 }
-
