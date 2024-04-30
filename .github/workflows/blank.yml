@@ -5,11 +5,20 @@ on:
   push:
     branches: [ "feature/*","develop", "master" ]
   pull_request:
+    types:
+        - closed
+  pull_request_review:
+    types: [submitted]
 
 permissions:
   contents: read
 
 jobs: 
+  approved:
+    if: github.event.review.state == 'APPROVED'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This PR was approved"
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
