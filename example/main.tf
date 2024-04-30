@@ -14,8 +14,7 @@ module "vpc" {
 }
 
 module "security_groups" {
-  source = "../modules/security_group"
-
+  source           = "../modules/security_group"
   environment      = var.environment
   environment_type = var.environment_type
   region           = var.region
