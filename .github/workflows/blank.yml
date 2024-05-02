@@ -47,7 +47,8 @@ jobs:
         continue-on-error: true 
         
       - name: Terraform Apply
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'master'
+        #if: github.event_name == 'pull_request' && github.event.pull_request.merged && github.event.pull_request.base.ref == 'master'
+        if: github.ref == 'refs/heads/master'
         run: |
           echo "The pull request was merged into the master branch."
           terraform apply -auto-approve -input=false
