@@ -3,7 +3,7 @@
 
 # AWS VPC Terraform Module
 
-This Terraform module creates a fully configured Virtual Private Cloud (VPC) in AWS, complete with public and private subnets, internet gateway, NAT gateway, route tables, network ACLs, and security groups.
+This Terraform module creates a fully configured Virtual Private Cloud (VPC) in AWS, complete with public and private subnets, internet gateway, NAT gateway, eip, route tables, network ACLs, and security groups.
 
 ## Features
 
@@ -30,7 +30,8 @@ module "custom_vpc" {
   vpc_name                    = "my-vpc"
   igw                         = "my-igw"
   public_subnet_cidr          = ["10.0.1.0/24"]
-  private_subnet_cidr         = ["10.0.3.0/24"]
+  private_subnet_cidr         = ["10.0.2.0/24"]
+  availability_zones          = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   container_subnet_cidr       = "10.0.7.0/24"
   nat_gateway                 = "my-nat-gateway"
   nat_eip                     = "my-nat-eip"
@@ -41,18 +42,18 @@ module "custom_vpc" {
   enable_public_subnets       = true
   enable_private_subnets      = true
   enable_container_subnet     = true
-  enable_nat_gateway          = false
+  enable_nat_gateway          = true
   enable_ingress              = true
   enable_egress               = true
 
   vpc_tags = {
     "Department" = "Engineering"
-    "Owner"      = "Sam OT"
+    "Owner"      = "xx"
   }
 
   tags = {
-    "Project" = "Project Zeus"
-    "Team"    = "Platform"
+    "Project" = "xx"
+    "Team"    = "xx"
   }
 }
 ```
@@ -119,8 +120,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - [Sam O](https://github.com/tipson007)
 
----
-
 ## Requirements
 
 | Name | Version |
@@ -132,7 +131,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.52.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.73 |
 
 ## Modules
 
