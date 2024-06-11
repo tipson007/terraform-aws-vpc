@@ -1,6 +1,6 @@
 terraform {
   cloud {
-    organization = "xx"
+    organization = "Cloud-Platform"
     workspaces {
       name = "terraform-aws-vpc"
     }
